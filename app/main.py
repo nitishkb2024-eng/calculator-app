@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from calculator import add, subtract
+from calculator import add, subtract, multiply, divide
 
 app = Flask(__name__)
 
@@ -9,7 +9,9 @@ def menu():
         "message": "Welcome to the Calculator Application",
         "options": {
             "1": "Addition",
-            "2": "Subtraction"
+            "2": "Subtraction",
+            "3": "Multiplication",
+            "4": "Division"
         }
     })
 
@@ -24,8 +26,15 @@ def calculate():
         return jsonify({"result": add(a, b)})
     elif choice == '2':
         return jsonify({"result": subtract(a, b)})
+    elif choice == '3':
+        return jsonify({"result": multiply(a, b)})
+    elif choice == '4':
+        try:
+            return jsonify({"result": divide(a, b)})
+        except ValueError as e:
+            return jsonify({"error": str(e)}), 400
     else:
-        return jsonify({"error": "Invalid Choice / Not implemented yet"}), 400
+        return jsonify({"error": "Invalid Choice"}), 400
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
